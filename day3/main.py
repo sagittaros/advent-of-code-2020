@@ -28,9 +28,10 @@ def found_trees(m: Grid):
     return [travel(m, s) for s in SLOPES]
 
 
-with open("input.txt") as f:
-    m = [[1 if c == "#" else 0 for c in n] for n in f.read().split("\n") if n != ""]
-    # part 1
-    print(travel(m, (3, 1)))
-    # part 2
-    print(math.prod(found_trees(m)))
+if __name__ == "__main__":
+    with open("input.txt") as f:
+        m = [[1 if c == "#" else 0 for c in n] for n in f.read().split("\n") if n != ""]
+        # part 1
+        print(travel(m, (3, 1)))
+        # part 2
+        print(math.prod(found_trees(m)))
