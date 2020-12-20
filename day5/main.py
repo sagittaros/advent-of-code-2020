@@ -42,14 +42,24 @@ def seat_ids(ps: List[List[str]]):
     return [seat_id(p) for p in ps]
 
 
+def min_max(nums: List[int]):
+    bigger_of = lambda a, b: a if a > b else b
+    smaller_of = lambda a, b: a if a < b else b
+    head, *tail = nums
+    mm = (head, head)
+    mm2 = min_max(tail) if tail else (head, head)
+    return (smaller_of(mm[0], mm2[0]), bigger_of(mm[1], mm2[1]))
+
+
 with open("input.txt") as f:
     ps = [[*p] for p in f.read().split("\n") if p != ""]
     ids = seat_ids(ps)
-    min_id, max_id = (min(ids), max(ids))
+
+    min_id, max_id = min_max(ids)
     print("min: ", min_id)
     print("max: ", max_id)
 
-    # instead of sorting nlog(n), we use the inductive law of natural numbers
+    # instead of sort+iter O(nlog(n)), we use the inductive law of natural numbers
     sum_of_natural_num = lambda n: n * (n + 1) / 2
     missing_num = int(
         sum_of_natural_num(max_id) - sum_of_natural_num(min_id - 1) - sum(ids)
