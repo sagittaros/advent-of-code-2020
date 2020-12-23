@@ -1,46 +1,70 @@
-Input = "389125467"
-# Input = "158937462"
-Moves = 10
+Input = "158937462"
+# Input = "389125467"
 
 
-def circular_slice(ls, start, L):
-    mod = lambda n: n % (len(ls))
-    s = mod(start)
-    e = mod(start + L)
-    if s < e:
-        return ls[s:e]
-    else:
-        return ls[s:] + ls[0:e]
+def take(cc, cur, n):
+    if n == 1:
+        return [cc[cur]]
+    return [cc[cur]] + take(cc, cc[cur], n - 1)
 
 
-def without(ls, ss):
-    return [c for c in ls if c not in ss]
+def find_dest(cc, cur, excl):
+    cur -= 1
+    if not cur:
+        cur = len(cc)
+    if cur not in excl:
+        return cur
+    # find next
+    return find_dest(cc, cur, excl)
 
 
-def pick3(ls, i):
-    return circular_slice(ls, i + 1, 3)
+def move(cc, cur, M):
+    for _ in range(M):
+        # take 3
+        taken = take(cc, cur, 3)
+        cc[cur] = cc[taken[-1]]
+
+        # find dest
+        dest = find_dest(cc, cur, taken)
+
+        # slot in
+        cc[taken[-1]] = cc[dest]
+        cc[dest] = taken[0]
+
+        # next
+        cur = cc[cur]
 
 
-def find_next_lower(ls, than):
-    if than == 0:
-        return max(ls)
-    if than - 1 in ls:
-        return than - 1
-    return find_next_lower(ls, than - 1)
+def genseq(cc, i=1):
+    # omit start
+    start = i
+    while cc[i] != start:
+        i = cc[i]
+        yield i
 
 
-if __name__ == "__main__":
-    print("Input: ", Input)
-    print("===============")
+def build_chain(nums):
+    return {n: nums[(i + 1) % len(nums)] for i, n in enumerate(nums)}
 
-    cups = list(map(int, [*Input]))
-    for i in range(Moves):
-        print(f"move {i+1}:")
-        print("cups: ", cups)
-        picked = pick3(cups, i)
-        tmp = without(cups, picked)
-        dest = tmp.index(find_next_lower(tmp, tmp[i % len(tmp)]))
-        cups = tmp[0 : dest + 1] + picked + tmp[dest + 1 :]
-        print("picked: ", picked)
-        print("dest: ", f"{tmp[dest]} @ index {dest}")
-        print()
+
+def part1():
+    print("Part1:")
+    cups = list(map(int, Input))
+    cc = build_chain(cups)
+    move(cc, cups[0], 100)
+    gen = genseq(cc, 1)
+    print(list(gen))
+
+
+def part2():
+    print("Part2:")
+    # TODO make lazy
+    cups = list(map(int, Input)) + list(range(10, 1_000_000 + 1))
+    cc = build_chain(cups)
+    move(cc, cups[0], 10_000_000)
+    gen = genseq(cc, 1)
+    print(next(gen) * next(gen))
+
+
+part1()
+part2()
