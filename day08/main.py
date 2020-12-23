@@ -4,17 +4,17 @@ Instruction = Tuple[str, int]
 
 
 def nop(val: int, cursor: int, _: int):
-    print(f"nop -> val({val}) @ {cursor}->{cursor+1}")
+    # print(f"nop -> val({val}) @ {cursor}->{cursor+1}")
     return (val, cursor + 1)
 
 
 def jmp(val: int, cursor: int, m: int):
-    print(f"jmp({m}) -> val({val}) @ {cursor}->{cursor+m}")
+    # print(f"jmp({m}) -> val({val}) @ {cursor}->{cursor+m}")
     return (val, cursor + m)
 
 
 def acc(val: int, cursor: int, m: int):
-    print(f"acc({m}) -> val({val+m}) @ {cursor}->{cursor+1}")
+    # print(f"acc({m}) -> val({val+m}) @ {cursor}->{cursor+1}")
     return (val + m, cursor + 1)
 
 
@@ -26,7 +26,7 @@ def early_term(ins: List[Instruction]):
         f, m = ins[cur]
         val, cur = globals()[f](val, cur, m)
         if cur in visited:
-            print("cur:", cur)
+            # print("cur:", cur)
             return val
         visited = [*visited, cur]
 
@@ -42,7 +42,7 @@ def backtrack(ins: List[Instruction]):
         f, m = ins[cur]
         if mut and mut[0] == cur:
             f = mut[1]
-            print(f"* mut: {f}, {cur}")
+            # print(f"* mut: {f}, {cur}")
             mut = None
         val, cur = globals()[f](val, cur, m)
         if cur in visited:
@@ -73,7 +73,7 @@ with open("input.txt") as f:
     ins = [(i, int(n)) for i, n in ins]
 
     # part 1
-    # print("\nearly term: ", early_term(ins))
+    print("\nearly term: ", early_term(ins))
 
     # part 2
     print("\nbacktrack: ", backtrack(ins))
