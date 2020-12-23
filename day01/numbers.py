@@ -16,4 +16,5 @@ def n_numbers_2020(nums: List[int], N, total=2020):
 
 with open("input.txt") as f:
     nums = [int(n) for n in f.read().split("\n") if n != ""]
+    print(n_numbers_2020(nums, 2))
     print(n_numbers_2020(nums, 3))

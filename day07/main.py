@@ -52,4 +52,4 @@ with open("input.txt") as f:
 
     # part 2: find contained bags
     count = count_bags(bs, ShinyGold) - 1  # -1 because outest is not counted
-    print(count)
+    print("\nCount:", count)
