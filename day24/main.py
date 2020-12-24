@@ -27,7 +27,7 @@ def adjacent(loc):
 
 
 # TODO SUPER SLOW
-def simul_flip(blacks):
+def simul_flipx(blacks):
     marked_as_white = [
         b
         for b in blacks
@@ -41,6 +41,18 @@ def simul_flip(blacks):
     )
     marked_as_black = [w for w, count in overlapped_whites.items() if count == 2]
     return list(set(blacks).union(set(marked_as_black)) - set(marked_as_white))
+
+
+def simul_flip(blacks):
+    # consider neighbours of blacks in the total set
+    # white will be touched by the numbers of black neighbours
+    # similarly, black will be touched by the numbers of black neighbours
+    # if white is touched exactly 2 times, flip it to black => Count = 2
+    # if black is touched by exactly 1 time, DO NOT flip to white => negate(0, >2) => Count = 1
+    cs = Counter([a for b in blacks for a in adjacent(b)])
+    white_flip_black = lambda c, n: c not in blacks and n == 2
+    remained_black = lambda c, n: c in blacks and n == 1
+    return [c for c, n in cs.items() if white_flip_black(c, n) or remained_black(c, n)]
 
 
 with open("input.txt") as f:
